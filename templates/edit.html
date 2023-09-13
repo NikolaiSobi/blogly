@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit user</title>
+</head>
+<body>
+    <h1>Edit {{user.first_name}} {{user.last_name}}</h1>
+    <form action="/edited{{user.id}}" method="POST">
+        <input type="text" name="name1" placeholder="first name">
+        <input type="text" name="name2" placeholder="last name">
+        <input type="text" name="image" placeholder="image URL">
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
