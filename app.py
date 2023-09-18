@@ -38,7 +38,7 @@ def edited(user_id):
     user = User.query.get(user_id)
     user.first_name = first_name if first_name else user.first_name
     user.last_name = last_name if last_name else user.last_name
-    user.image_url = image_url if image_url else "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+    user.image_url = image_url if image_url else user.image_url
     db.session.add(user)
     db.session.commit()
     return redirect(f"/{user.id}")
@@ -56,6 +56,7 @@ def edit_user(user_id):
 
 @app.route('/delete<int:user_id>', methods=['GET', 'POST'])
 def delete_user(user_id):
+    Post.query.filter_by(user_id = user_id).delete()
     User.query.filter_by(id = user_id).delete()
     db.session.commit()
     return redirect('/')
@@ -65,4 +66,56 @@ def delete_user(user_id):
 def show_user(user_id):
     """Show details about single user"""
     user = User.query.get_or_404(user_id)
-    return render_template("details.html", user=user)
+    posts = Post.query.get(user_id)
+    post_all = Post.query.all()
+    return render_template("details.html", user=user, posts=posts, post_all=post_all)
+
+@app.route('/createPost<int:user_id>')
+def create_post(user_id):
+    user = User.query.get(user_id)
+    return render_template('createPost.html', user=user)
+
+@app.route('/addPost<int:user_id>', methods=['GET','POST'])
+def addPost(user_id):
+    title = request.form['title']
+    content = request.form['content']
+    post = Post(title=title, content=content, user_id=user_id)
+
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f'/{user_id}')
+
+@app.route('/user<int:user_id>/post<int:post_id>')
+def post_details(user_id, post_id):
+    post = Post.query.get(post_id)
+    user = User.query.get(user_id)
+
+    return render_template('postDetails.html', post=post, user=user)
+
+@app.route('/edit/user<int:user_id>/post<int:post_id>')
+def editPost(user_id, post_id):
+    user = User.query.get(user_id)
+    post = Post.query.filter(Post.id == post_id).first()
+
+    return render_template('editPost.html', user=user, post=post)
+
+@app.route('/delete/user<int:user_id>/<int:post_id>', methods=['POST'])
+def deletePost(user_id, post_id):
+    Post.query.filter(Post.id == post_id).delete()
+    db.session.commit()
+    return redirect(f'/{user_id}')
+
+@app.route('/editing/user<int:user_id>/post<int:post_id>', methods=['POST'])
+def editing_post(user_id, post_id):
+    post = Post.query.filter(Post.id == post_id).first()
+    title = request.form['title']
+    content = request.form['post']
+
+    post.title = title if title else post.title
+    post.content = content
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f'/{user_id}')
+

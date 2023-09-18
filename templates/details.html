@@ -7,7 +7,11 @@
 </head>
 <body>
     <h1>{{user.first_name}} {{user.last_name}}</h1>
-    <img src={{user.image_url}} width="150" height="150">
+    {% if user.image_url %}
+        <img src={{user.image_url}} width="150" height="150">
+    {% else %}  
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" width="150" height="150">
+    {% endif %}
     <form action="/edit{{user.id}}">
     <button>Edit</button>
     </form>
@@ -15,7 +19,21 @@
     <form action="/delete{{user.id}}">
         <button>Delete</button>
     </form>
-    <div></div>
-    <a href="/">Home</a>
+    <h2>Posts</h2>
+    <ul>
+        {% if posts %}
+            {% for i in post_all %}
+                {% if i.user_id == user.id %}
+                    <li><a href="/user{{user.id}}/post{{i.id}}">{{i.title}}</a></li>
+                {% else %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        {% endif %}
+    </ul>
+    <form action="/createPost{{user.id}}">
+        <button type="submit">Add Post</button>
+    </form>
+    <a href="/">Users</a>
 </body>
 </html>
