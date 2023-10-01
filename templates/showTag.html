@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>{{tag.name}}</h1>
+    {% set myList = [] %}
+    {% for i in range(postTag|length) %}
+        {% if postTag[i] %}
+            {% if postTag[i].tag_id == tag.id %}
+                {{myList.append(postTag[i].post_id) or ""}}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% for i in range(post|length) %}
+        {% if post[i] %}
+            {% if post[i].id in myList %}
+                <p>{{post[i].title}}</p>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    
+
+    <form action="/edit{{tag.name}}">
+        <button type="submit">Edit</button>
+    </form>
+
+    <form action="/delete{{tag.name}}">
+        <button type="submit">Delete</button>
+    </form>
+</body>
+</html>

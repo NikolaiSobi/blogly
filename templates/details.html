@@ -21,19 +21,31 @@
     </form>
     <h2>Posts</h2>
     <ul>
-        {% if posts %}
+        
             {% for i in post_all %}
                 {% if i.user_id == user.id %}
                     <li><a href="/user{{user.id}}/post{{i.id}}">{{i.title}}</a></li>
                 {% else %}
                 {% endif %}
             {% endfor %}
-        {% else %}
-        {% endif %}
+        
     </ul>
     <form action="/createPost{{user.id}}">
         <button type="submit">Add Post</button>
     </form>
+
+    <h2>Tags</h2>
+    <ul>
+        
+            {% for i in tags_all %}
+                <li><a href="/tags/{{i.name}}">{{i.name}}</a></li>
+            {% endfor %}
+        
+    </ul>
+    <form action="/createTag">
+        <button type="submit">Add Tag</button>
+    </form>
+
     <a href="/">Users</a>
 </body>
 </html>

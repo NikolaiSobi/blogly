@@ -10,8 +10,15 @@
     <form action="/editing/user{{user.id}}/post{{post.id}}" method="POST">
         <label for="title">Title</label>
         <input type="text" name="title" placeholder="{{post.title}}">
+        <br><br/>
         <label for="post">Post Content</label>
         <textarea name="post" cols="30" rows="5" placeholder="{{post.content}}"></textarea>
+        <br><br/>
+        {% for i in tags %}
+            <input type="checkbox" name="checkbox" value="{{i.name}}">
+            <label for="checkbox">{{i.name}}</label>
+            {% endfor %}
+        <br><br/>
         <button type="submit">Submit</button>
     </form>
     <form action="/{{user.id}}">
